@@ -1,0 +1,25 @@
+{
+  "name": "tsrsml-breakathon-2022",
+  "main": "index.js",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "devStart": "nodemon server.js"
+  },
+  "devDependencies": {
+    "vite": "^2.9.5"
+  },
+  "dependencies": {
+    "@janbican/caesar-cipher": "^1.0.0",
+    "ejs": "^3.1.7",
+    "express": "^4.18.0",
+    "os": "^0.1.2",
+    "random-birthday": "^1.0.1",
+    "unique-names-generator": "^4.7.1"
+  }
+}
