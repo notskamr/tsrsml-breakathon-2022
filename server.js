@@ -135,6 +135,16 @@ app.get('/welcome', (req, res) => {
 })
 
 app.get('/start', (req, res) => {
+    res.render('start')
+})
+
+app.post('/api/add-teams', async (req, res) => {
+
+    const { team1, team2, team3, team4 } = req.body
+    console.log (team1, team2, team3, team4)
+})
+
+app.get('/round', (req, res) => {
     const person = generatePerson()
     const password = generatePassword(person)
 
@@ -144,7 +154,7 @@ app.get('/start', (req, res) => {
     console.log(password, encryptedData)
 
 
-    res.render('start', {
+    res.render('round', {
         cipher: ciphertext,
         password: password['password'],
         aspects: password['aspects'],
@@ -152,6 +162,9 @@ app.get('/start', (req, res) => {
     })
 })
 
+app.get('/clear', (req, res) => {
+    return res.render('clear')
+})
 
 
 
