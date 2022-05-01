@@ -15,11 +15,11 @@
         const PetsName = "<%= encryptedData[3] %>"
 
 
-        const CIPHERTEXT = "<%= cipher %>"
         const PASSWORD = "<%= password %>"
         var aspects = '<%= aspects %>'
         const ASPECTS = aspects.split(",")
-        console.log(CIPHERTEXT, PASSWORD, ASPECTS, FirstName, LastName, FavoriteColor, PetsName)
+
+        console.log(PASSWORD, ASPECTS, FirstName, LastName, FavoriteColor, PetsName)
     </script>
 </head>
 <body>
@@ -30,11 +30,55 @@
             </a>
           </nav>
     </header>
-    
+    <p id="countdown"></p>
+    <p>Name: <%= encryptedData[0] %></p>
+    <p>Birthday: <%= person['person']['birthday'][1]['day'][1] %> <%= person['person']['birthday'][1]['month'] %> <%= person['person']['birthday'][1]['year'] %></p>
+    <p>Favorite Color: <%= encryptedData[1] %></p>
+    <p>Pet's Name: <%= encryptedData[2] %> (<%= person['pet']['species'] %>)</p>
+    <h1>Aspects: </h1>
+    <div id="aspect-container">
+    </div>
+
+    <form id="guess-pass-form">
+        <input type="text" id=passwordguess placeholder="Your guess!" required>
+        <input type="submit">
+    </form>
+
     <script>
-
         if (!JSON.parse(localStorage.getItem("teams"))) window.location.replace('/')
+        // if (JSON.parse(localStorage.getItem("round"))) window.location.replace('/')
+        localStorage.setItem("state", JSON.stringify({ round: 1, stage: 1 }))
 
+        window.onload = async () => {
+            await fetch('/round', {
+                method: "POST",
+                headers: {'Content-Type': "application/json"},
+                body: JSON.stringify({ teams: JSON.parse(localStorage.getItem("teams")), state: JSON.parse(localStorage.getItem("state")) })
+            })
+        
+        const form = document.getElementById('guess-pass-form')
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const guessedPass = document.getElementById("passwordguess")
+
+            if (guessedPass != PASSWORD)
+
+            localStorage.setItem("teams", JSON.stringify({team1: {name: team1, score: 0}, team2: {name: team2, score: 0}, team3: {name: team3, score: 0}, team4: {name: team4, score: 0}}))
+            console.log(JSON.parse(localStorage.getItem("teams")))
+            window.location.replace('/round')
+        })
+        }
+
+        
+        const aspectContainer = document.getElementById("aspect-container")
+        for (let i = 0; i < ASPECTS.length; i++) {
+            console.log(ASPECTS[i])
+            const p = document.createElement("p")
+            p.appendChild(document.createTextNode(ASPECTS[i]))
+            aspectContainer.appendChild(p)
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>

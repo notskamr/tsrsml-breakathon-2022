@@ -11,7 +11,8 @@ function updateCountdown() {
 
     time--;
 
-    if (time < 0) { //stop the setInterval whe time = 0 for avoid negative time
+    if (time < 0) { //stop the setInterval whe time = 0 to avoid negative time
         clearInterval(refreshInterval);
+
     }
 }

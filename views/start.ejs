@@ -27,7 +27,8 @@
     </form>
     
     <script>
-        console.log(JSON.parse(localStorage.getItem("teams")))
+        if (JSON.parse(localStorage.getItem("teams"))) window.location.replace('/round')
+
         const form = document.getElementById('team-names')
         form.addEventListener('submit', async (e) => {
             e.preventDefault()
@@ -37,15 +38,9 @@
             const team3 = document.getElementById('3').value
             const team4 = document.getElementById('4').value
 
-            localStorage.setItem("teams", JSON.stringify({team1: team1, team2: team2, team3: team3, team4: team4}))
+            localStorage.setItem("teams", JSON.stringify({team1: {name: team1, score: 0}, team2: {name: team2, score: 0}, team3: {name: team3, score: 0}, team4: {name: team4, score: 0}}))
             console.log(JSON.parse(localStorage.getItem("teams")))
-            /*await fetch('/api/add-teams', {
-                method: "POST",
-                headers: {
-                    'Content-Type': "application/json"
-                },
-                body: JSON.stringify({team1, team2, team3, team4})
-            }).then(window.location.replace('/round'))*/
+            window.location.replace('/round')
         })
 
     </script>
