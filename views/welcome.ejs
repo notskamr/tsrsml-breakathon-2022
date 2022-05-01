@@ -6,21 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="../scripts/break-a-thon.js" defer></script>
-    <title>Break-a-thon | Round <%= roundNumber %></title>
-
-    <script>
-        const FirstName = "<%= encryptedData[0] %>"
-        const LastName = "<%= encryptedData[1] %>"
-        const FavoriteColor = "<%= encryptedData[2] %>"
-        const PetsName = "<%= encryptedData[3] %>"
-
-
-        const CIPHERTEXT = "<%= cipher %>"
-        const PASSWORD = "<%= password %>"
-        var aspects = '<%= aspects %>'
-        const ASPECTS = aspects.split(",")
-        console.log(CIPHERTEXT, PASSWORD, ASPECTS, FirstName, LastName, FavoriteColor, PetsName)
-    </script>
+    <title>Break-a-thon | Welcome</title>
 </head>
 <body>
     <header>
@@ -31,7 +17,16 @@
           </nav>
     </header>
     
+    <section id="main" class="text-center" style="padding: 20px">
+        <h1 style="font-size: 3rem;" class="mb-5">Welcome!</h1>
+        <h2>Rules:</h2>
+        <ul style="list-style-position: inside">
+            <li>There are 4 groups per class; each round, each group will be given information about a fake 'person'</li>
+            <li>TODO: add more rules</li>
+        </ul>
 
+        <a class="btn btn-outline-primary btn-lg" href="/start">Begin!</a>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 </html>

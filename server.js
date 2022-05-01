@@ -2,8 +2,8 @@
 import express from 'express'
 import * as http from 'http'
 
-// Using 'caesar-cipher' package by '@janbican' for simplicity
-import { encrypt, decrypt } from '@janbican/caesar-cipher'
+// Using 'caesar-shift' for simplicity
+import caesarShift from './caesar.js'
 
 // Using 'unique-names-generator' package for generation of texts
 import { uniqueNamesGenerator, names, animals, colors } from 'unique-names-generator'
@@ -46,53 +46,6 @@ function generatePerson() {
 }
 
 
-/*function generatePassword(person) {
-
-    // Weights:
-    // * Only 3 aspects of a person will be taken into a password
-
-    // Name: 17
-    // Birthday => Year: 14, Day: 1, Month: 2
-    // Color: 7
-
-    // Pet's Name: 4
-
-    const personName = person['person']['name']
-    const personBirthdayYear = person['person']['birthday'][1]['year'].toString().slice(-2)
-    const personBirthdayDay = person['person']['birthday'][1]['day'][0].toString()
-    const personBirthdayMonth = person['person']['birthday'][1]['month']
-    const personFavoriteColor = person['person']['color']
-
-    const petName = person['pet']['name']
-
-    var weighted = []
-
-    weighted = Array(17).fill(personName)
-    weighted.push(...Array(14).fill(personBirthdayYear))
-    weighted.push(...Array(1).fill(personBirthdayDay))
-    weighted.push(...Array(2).fill(personBirthdayMonth))
-    weighted.push(...Array(7).fill(personFavoriteColor))
-
-    weighted.push(...Array(4).fill(petName))
-
-    var password = ""
-    var aspects = []
-
-    var aspectsTaken = 0
-    console.log(weighted)
-    while (aspectsTaken <= 2) {
-        let aspect = weighted[Math.floor(Math.random() * weighted.length)]
-        aspects.push(aspect)
-        weighted = weighted.filter( (item) => {
-            return item !== aspect
-        })
-        aspectsTaken++
-        password += aspect.toString()
-    }
-
-    console.log(aspects)
-    return {password: password, aspects: aspects}
-}*/
 
 function generatePassword(person) {
 
@@ -112,7 +65,7 @@ function generatePassword(person) {
     {
         1: {   
             password: `${personFirstName}${personLastName}${personBirthdayYear}`,
-            aspects: ["person.firstName", "person.lastName", "person.birthdayYear"]
+            aspects: ["person.firstName", "person.lastName", "person.birthdayYear.lastTwoDigits"]
         },
         2: {
             password: `${personFirstName}${personBirthdayDay}${personBirthdayMonth}`,
@@ -120,23 +73,46 @@ function generatePassword(person) {
         },
         3: {
             password: `${personLastName.toLowerCase()}${personFirstName.toLowerCase()}@${personBirthdayYear}`,
-            aspects: ["person.lastName.lower", "person.firstName.lower", "person.birthdayYear"]
+            aspects: ["person.lastName.lower", "person.firstName.lower", "person.birthdayYear.lastTwoDigits"]
         },
         4: {
             password: `${personFavoriteColor.toLowerCase()}-${personFirstName.toLowerCase()}.${personBirthdayYear}`,
-            aspects: ["person.favoriteColor", "hyphen", "name", "dot", "person.birthdayYear"]
+            aspects: ["person.favoriteColor", "hyphen", "person.firstName.lower", "dot", "person.birthdayYear.lastTwoDigits"]
         },
         5: {
             password: `${personFavoriteColor.toLowerCase()}-${petName.toLowerCase()}.${personBirthdayYear}`,
-            aspects: ["pet.name.lower", "hyphen", "color", "dot", "person.birthdayYear"]
+            aspects: ["person.favoriteColor.lower", "hyphen", "pet.name.lower", "dot", "person.birthdayYear.lastTwoDigits"]
         },
         6: {
             password: `${personFavoriteColor}-${personFirstName}@${personBirthdayDay}${personBirthdayMonth}`,
-            aspects: ["person.favoriteColor", "hyphen", "person.name", "at", "person.birthdayYear", "person.birthdayMonth"]
+            aspects: ["person.favoriteColor", "hyphen", "person.firstName", "at", "person.birthdayYear", "person.birthdayMonth"]
+        },
+        7: {
+            password: null
+        },
+        8: {
+            password: null
         }
     }
 
     return types[Math.floor(Math.random() * 6) + 1]
+}
+
+function encryptData(person) {
+    const data = [person['person']['name'][0], person['person']['name'][1], person['person']['color'], person['pet']['name']]
+    var outData = []
+
+    for (let i = 0; i < data.length; i++) {
+        const randChance = Math.floor(Math.random() * 11);
+        const randShift = Math.floor(Math.random() * 16) + 1
+        if (randChance >= 7) { // 30% chance
+            outData.push(data[i])
+        } else { // 70% chance
+            outData.push(caesarShift(data[i], randShift) + ` (${randShift})`)
+        }
+    }
+
+    return outData
 }
 
 const app = express()
@@ -151,19 +127,29 @@ app.set('view engine', 'ejs')
 
 // blank route redirecting to 'start' of the breakathon
 app.get('/', (req, res) => {
-    return res.redirect("start")
+    return res.redirect("welcome")
+})
+
+app.get('/welcome', (req, res) => {
+    res.render('welcome')
 })
 
 app.get('/start', (req, res) => {
-    var person = generatePerson()
+    const person = generatePerson()
+    const password = generatePassword(person)
 
-    // console.log(JSON.stringify(person))
-    var password = generatePassword(person)
-    console.log(password)
-    //console.log(password['password'])
+    const ciphertext = caesarShift(password['password'], Math.floor(Math.random() * 16) + 1)
+    const encryptedData = encryptData(person)
+
+    console.log(password, encryptedData)
 
 
-    res.render('start', {data: null})
+    res.render('start', {
+        cipher: ciphertext,
+        password: password['password'],
+        aspects: password['aspects'],
+        encryptedData: encryptedData
+    })
 })
 
 

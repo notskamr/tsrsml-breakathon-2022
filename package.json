@@ -15,7 +15,6 @@
     "vite": "^2.9.5"
   },
   "dependencies": {
-    "@janbican/caesar-cipher": "^1.0.0",
     "ejs": "^3.1.7",
     "express": "^4.18.0",
     "os": "^0.1.2",
