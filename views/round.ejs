@@ -28,6 +28,9 @@
             <a style="font-size: 1.6rem;" class="navbar-brand mx-auto" href="#">
               Break-a-Thon
             </a>
+            <p id="header-data">
+                
+            </p>
           </nav>
     </header>
     <p id="countdown"></p>
@@ -44,6 +47,8 @@
         <input type="submit">
     </form>
 
+    <p id="message"></p>
+
     <script>
 
         if (!JSON.parse(localStorage.getItem("teams"))) window.location.replace('/')
@@ -51,10 +56,14 @@
 
         var TEAMS = JSON.parse(localStorage.getItem("teams"))
         var STATE = JSON.parse(localStorage.getItem("state"))
+
         const ROUND = STATE['round']
         const STAGE = STATE['stage']
 
         document.title = `Break-a-thon | Round ${ROUND}, Stage ${STAGE}`
+
+        const headerData = document.getElementById("header-data")
+        headerData.innerHTML = `Round ${ROUND}, Stage ${STAGE}: ${TEAMS[`team${STAGE}`]['name']} | ${TEAMS[`team${STAGE}`]['score']} points`
 
         window.onload = async () => {
             await fetch('/round', {
@@ -66,25 +75,61 @@
 
         const form = document.getElementById('guess-pass-form')
         form.addEventListener('submit', check)
-        
+        form.addEventListener('timeOut', next)
         async function check(e) {
+            const messageBox = document.getElementById("message")
             e.preventDefault()
 
             const guessedPass = document.getElementById("password").value
             if (guessedPass == PASSWORD) {
-                TEAMS[`team${STAGE}`]['score'] = TEAMS[`team${STAGE}`]['score'] + 100
+                scoreScored = 100
+                if (time < (3/4) * countdownTime) scoreScored = 75
+                if (time < (2/4) * countdownTime) scoreScored = 50
+                if (time < (1/4) * countdownTime) scoreScored = 25
+                if (time < (1/4) * countdownTime) scoreScored = 25
+
+                TEAMS[`team${STAGE}`]['score'] = TEAMS[`team${STAGE}`]['score'] + scoreScored
+                messageBox.innerHTML = `Let's go! Team ${TEAMS[`team${STAGE}`]['name']} scored ${scoreScored}!`
             }
 
             else {
-                // if not correct
+                messageBox.innerHTML = `Better luck next time, Team ${TEAMS[`team${STAGE}`]['name']}. Incorrect.`
             }
 
+            await sleep(2500)
+
             var nextStage;
+            var nextRound;
+            if (STAGE == 4) { nextStage = 1; nextRound = ROUND + 1; messageBox.innerHTML = `Time for Round ${nextRound}!` } else { nextStage = STAGE + 1; nextRound = ROUND}
+            
 
-            if (STAGE == 4) { nextStage = 1 } else { nextStage = STAGE + 1 }
+            STATE['round'] = nextRound
+            STATE['stage'] = nextStage
+
             localStorage.setItem("teams", JSON.stringify(TEAMS))
+            localStorage.setItem("state", JSON.stringify(STATE))
 
 
+            window.location.replace('/round')
+        }
+
+        async function next(e) {
+            const messageBox = document.getElementById("message")
+            e.preventDefault()
+            messageBox.innerHTML = `You ran out of time!`
+
+            await sleep(2500)
+
+            var nextStage;
+            var nextRound;
+            if (STAGE == 4) { nextStage = 1; nextRound = ROUND + 1 } else { nextStage = STAGE + 1; nextRound = ROUND}
+            
+
+            STATE['round'] = nextRound
+            STATE['stage'] = nextStage
+
+            localStorage.setItem("teams", JSON.stringify(TEAMS))
+            localStorage.setItem("state", JSON.stringify(STATE))
 
             window.location.replace('/round')
         }
