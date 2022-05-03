@@ -106,9 +106,12 @@ function encryptData(person) {
 
     for (let i = 0; i < data.length; i++) {
         const randChance = Math.floor(Math.random() * 11);
-        var randShift = Math.floor(Math.random() * 16) + 1
         
-        if (Math.random() < 0.5) randShift = randShift * -1
+        let max = 5
+        let min = 3
+        var randShift = Math.floor(Math.random() * (max - min + 1) + min)
+        
+        // if (Math.random() < 0.5) randShift = randShift * -1
 
         if (randChance >= 7) { // 30% chance
             outData.push(data[i])

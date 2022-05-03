@@ -1,5 +1,5 @@
-let countdownTime = 3 * 60
-let time = 3 * 60; //minutes * 60 seconds
+let countdownTime = .5 * 60
+let time = .5 * 60; //minutes * 60 seconds
 let refreshInterval = setInterval(updateCountdown, 1000); //update every 1 second
 
 function updateCountdown() {

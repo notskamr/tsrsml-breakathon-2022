@@ -135,11 +135,15 @@
         }
         
         const aspectContainer = document.getElementById("aspect-container")
+        const p = document.createElement("p")
+        aspectContainer.appendChild(p)
         for (let i = 0; i < ASPECTS.length; i++) {
             console.log(ASPECTS[i])
-            const p = document.createElement("p")
-            p.appendChild(document.createTextNode(ASPECTS[i]))
-            aspectContainer.appendChild(p)
+            if(i == ASPECTS.length - 1) p.innerHTML += ` ${ASPECTS[i]}`;
+            else {
+                p.innerHTML += ` ${ASPECTS[i]} + `
+            }
+            
         }
 
         function sleep(ms) {
