@@ -87,7 +87,7 @@ function generatePassword(person) {
         },
         6: {
             password: `${personFavoriteColor}-${personFirstName}@${personBirthdayDay}${personBirthdayMonth}`,
-            aspects: ["person.favoriteColor", "hyphen", "person.firstName", "at", "person.birthdayYear", "person.birthdayMonth"]
+            aspects: ["person.favoriteColor", "hyphen", "person.firstName", "at", "person.birthdayDay", "person.birthdayMonth"]
         },
         7: {
             password: null
@@ -106,7 +106,7 @@ function encryptData(person) {
 
     for (let i = 0; i < data.length; i++) {
         const randChance = Math.floor(Math.random() * 11);
-        
+
         let max = 5
         let min = 3
         var randShift = Math.floor(Math.random() * (max - min + 1) + min)
